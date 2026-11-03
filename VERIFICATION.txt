@@ -1,0 +1,42 @@
+Verification performed: 2 November 2026
+
+Host compiler: GCC, strict ANSI C89
+Build command (run in the project directory):
+gcc -x c -std=c89 -pedantic -Wall -Wextra -DHEADLESS ROBOT.C -lm -o controller-check.exe
+
+Build result: success, no compiler warnings.
+Run command: controller-check.exe
+Exit status: 0
+Output:
+PASS: 1007 paths, 2068202 ticks; waypoint order, bounded motion, final position, sensors, validation.
+
+The checks run the same updateRobot and detectSensors functions used by
+the graphics application. They verify:
+- Completion of 1007 routes at varying speeds from 0.5 to 4 pixels/tick.
+- Sample route, near reversals, 30 points spaced one pixel apart, random routes.
+- Movement displacement never exceeds the configured speed per tick.
+- Segment index advances in order, only after reaching each waypoint.
+- Final position reaches the requested destination within numeric tolerance.
+- Final calculated completion equals 100 percent.
+- Left, center, right and no-detection sensor geometry on a horizontal track.
+- Left-only and right-only readings actually affect the heading update.
+- Large-error recovery rotates toward the target.
+- Out-of-range and duplicate coordinates are rejected.
+
+This does not verify Borland code generation, BGI linking, keyboard interaction,
+or visual appearance. No actual Turbo C/DOS graphics execution was available.
+The normal source build includes graphics and excludes this host-only harness.
+Do not define HEADLESS in the Turbo C project.
+
+Updated coordinate model checks: 5 additional auto-fit routes PASS.
+Verified automatic (0,0), negative and nine-digit values, viewport fit,
+and final world-coordinate accuracy within 0.001 unit.
+
+Animation update verification:
+- Complete graphics code passes GCC ANSI C89 syntax checking against
+  BGI-compatible function declarations (not a Borland runtime test).
+- Full-screen draw is outside the animation loop.
+- Rover restoration uses a checked 33x33 image patch and COPY_PUT.
+- Panel updates erase only individual text rows; no full-screen clearing.
+- Existing controller and auto-fit checks pass unchanged.
+- Visual DOSBox execution remains to be checked on the user installation.
